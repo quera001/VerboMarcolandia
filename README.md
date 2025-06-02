@@ -1,2 +1,1 @@
-# Verbo Marcolândia
-Sistema completo de gerenciamento de escalas, usuários, departamentos e devocionais (Maná Diário).
+Sistema Verbo Marcolândia com usuários, departamentos, escalas e Maná Diário.
