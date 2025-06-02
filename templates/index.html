@@ -4,44 +4,108 @@
 <head>
     <meta charset="UTF-8">
     <title>Verbo Marcolândia - Escalas</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #fff;
+            color: #000;
+            padding-top: 2rem;
+            font-family: Arial, sans-serif;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .logo {
+            max-width: 300px;
+        }
+        .form-section {
+            max-width: 500px;
+            margin: 2rem auto;
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ccc;
+        }
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.9em;
+            color: #888;
+        }
+    </style>
 </head>
 <body>
-    <h1>Bem-vindo ao Sistema de Escalas</h1>
 
+<header>
+    <img src="{{ url_for('static', filename='img/logo.png') }}" class="logo" alt="Logo Verbo da Vida">
+    <h1 class="mt-3">Sistema de Escalas</h1>
+</header>
+
+<div class="container">
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
-        <ul>
+        <div class="alert-container">
         {% for category, message in messages %}
-          <li><strong>{{ category.title() }}:</strong> {{ message }}</li>
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
         {% endfor %}
-        </ul>
+        </div>
       {% endif %}
     {% endwith %}
 
     {% if session.user %}
-        <p>Olá, {{ session.user.username }}! (<a href="{{ url_for('logout') }}">Sair</a>)</p>
-        <form method="post" enctype="multipart/form-data" action="{{ url_for('upload') }}">
-            <input type="text" name="title" placeholder="Título da Escala" required>
-            <input type="text" name="department" placeholder="Departamento" required>
-            <input type="file" name="file" required>
-            <button type="submit">Enviar Escala</button>
-        </form>
+        <div class="form-section">
+            <p>Olá, <strong>{{ session.user.username }}</strong>! <a href="{{ url_for('logout') }}" class="btn btn-sm btn-outline-danger float-end">Sair</a></p>
+            <form method="post" enctype="multipart/form-data" action="{{ url_for('upload') }}">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Título da Escala</label>
+                    <input type="text" name="title" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="department" class="form-label">Departamento</label>
+                    <input type="text" name="department" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="file" class="form-label">Selecionar Arquivo</label>
+                    <input type="file" name="file" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-warning w-100">Enviar Escala</button>
+            </form>
+        </div>
     {% else %}
-        <form method="post" action="{{ url_for('login') }}">
-            <input type="text" name="username" placeholder="Usuário" required>
-            <input type="password" name="password" placeholder="Senha" required>
-            <button type="submit">Entrar</button>
-        </form>
+        <div class="form-section">
+            <form method="post" action="{{ url_for('login') }}">
+                <h4 class="mb-3">Acesso Restrito</h4>
+                <input type="text" name="username" class="form-control mb-2" placeholder="Usuário" required>
+                <input type="password" name="password" class="form-control mb-3" placeholder="Senha" required>
+                <button type="submit" class="btn btn-dark w-100">Entrar</button>
+            </form>
+        </div>
     {% endif %}
 
-    <h2>Escalas Recentes:</h2>
-    <ul>
-        {% for escala in schedules %}
-        <li><a href="{{ url_for('uploaded_file', filename=escala.filename) }}">{{ escala.title }}</a> - {{ escala.department }}</li>
-        {% else %}
-        <li>Nenhuma escala cadastrada.</li>
-        {% endfor %}
-    </ul>
+    <section class="mt-5">
+        <h2 class="text-center">Escalas Recentes</h2>
+        <ul class="list-group mt-3">
+            {% for escala in schedules %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <a href="{{ url_for('uploaded_file', filename=escala.filename) }}" target="_blank">{{ escala.title }}</a>
+                <span class="badge bg-secondary">{{ escala.department }}</span>
+            </li>
+            {% else %}
+            <li class="list-group-item">Nenhuma escala cadastrada.</li>
+            {% endfor %}
+        </ul>
+    </section>
+</div>
+
+<footer>
+    <p>&copy; 2025 Igreja Verbo da Vida - Marcolândia</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
